@@ -4,7 +4,7 @@ import DiseasesPage from './pages/diseasesPage'
 import ReportsPage from './pages/reportsPage'
 import SignInPage from './pages/signInPage'
 import SignUpPage from './pages/signUpPage'
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom"
 import { Typography } from '@mui/material'
 import ProtectedRoutes from './auth/protectedRoutes'
 import { useEffect, useState } from 'react'
@@ -106,23 +106,25 @@ export default function App() {
   // Routing done with react router
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Defining Auth Routes */}
-        <Route path='/' element={<SignUpPage authorize={authorize} />} />
-        <Route path='/signin' element={<SignInPage authorize={authorize} />} />
-        <Route path='/options' element={<UserOptionsPage userName={userName} signOut={signOut} />} />
+      <HashRouter>
+        <Routes>
+          {/* Defining Auth Routes */}
+          <Route path='/' element={<SignUpPage authorize={authorize} />} />
+          <Route path='/signin' element={<SignInPage authorize={authorize} />} />
+          <Route path='/options' element={<UserOptionsPage userName={userName} signOut={signOut} />} />
 
-        {/* Defining protected routes */}
-        <Route element={<ProtectedRoutes userToken={userToken} />}>
-          <Route path='/home' element={<HomePage diseases={diseases} />} />
-          <Route path='/diseases' element={<DiseasesPage diseases={diseases} addDisease={addDisease} removeDisease={removeDisease} />} />
-          <Route path='/reports' element={<ReportsPage diseases={diseases} reports={reports} />} />
-          <Route path='/recommendations' element={<Typography variant="h1" component="h1" textAlign="center">Under Construction...</Typography>} />
-        </Route>
+          {/* Defining protected routes */}
+          <Route element={<ProtectedRoutes userToken={userToken} />}>
+            <Route path='/home' element={<HomePage diseases={diseases} />} />
+            <Route path='/diseases' element={<DiseasesPage diseases={diseases} addDisease={addDisease} removeDisease={removeDisease} />} />
+            <Route path='/reports' element={<ReportsPage diseases={diseases} reports={reports} />} />
+            <Route path='/recommendations' element={<Typography variant="h1" component="h1" textAlign="center">Under Construction...</Typography>} />
+          </Route>
 
-        {/* Defining Error Page */}
-        <Route path='/*' element={<NotFoundPage />} />
-      </Routes>
+          {/* Defining Error Page */}
+          <Route path='/*' element={<NotFoundPage />} />
+        </Routes>
+      </HashRouter>
     </BrowserRouter>
   )
 }
