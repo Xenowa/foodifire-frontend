@@ -12,6 +12,8 @@ export default function Report({ diseases, prediction, closeReport }) {
     const foodImageURL = prediction.foodImage || ""
     const predictedFoodName = prediction.results.foodName || ""
     const predictedDiseases = prediction.results.relatedConditions || []
+    const dbMessage = prediction.results.message || ""
+    console.log(dbMessage)
     let consumable = true
 
     // If at least 1 predicted disease matches with an users disease conditions
@@ -42,30 +44,37 @@ export default function Report({ diseases, prediction, closeReport }) {
                 </IconButton>
             </Box>
 
-            <Box sx={{ width: "80%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(8rem, 1fr))", gap: "0.5rem" }}>
-                {diseases.map((disease) => {
-                    return (
-                        <Chip
-                            key={"KEY-" + disease}
-                            label={disease.charAt(0).toUpperCase() + disease.slice(1)}
-                            variant="contained"
-                            color={predictedDiseases.includes(disease.toLowerCase()) ? "error" : "success"}
-                        />
-                    )
-                })}
-            </Box>
+            {/* Check if there is a database error */}
+            {dbMessage === "Error!, Database not functional!" ?
+                <Typography variant="h1" component="h1" color="error" textAlign="center">{dbMessage}</Typography> :
+                // If no DB Error proceed to display the rest of the disease data
+                <>
+                    <Box sx={{ width: "80%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(8rem, 1fr))", gap: "0.5rem" }}>
+                        {diseases.map((disease) => {
+                            return (
+                                <Chip
+                                    key={"KEY-" + disease}
+                                    label={disease.charAt(0).toUpperCase() + disease.slice(1)}
+                                    variant="contained"
+                                    color={predictedDiseases.includes(disease.toLowerCase()) ? "error" : "success"}
+                                />
+                            )
+                        })}
+                    </Box>
 
-            {consumable ?
+                    {consumable ?
 
-                <Alert severity="success" variant="outlined">
-                    <AlertTitle>Safe</AlertTitle>
-                    <Typography variant="h5" component="h5">The Food is safe for consuming</Typography>
-                </Alert> :
+                        <Alert severity="success" variant="outlined">
+                            <AlertTitle>Safe</AlertTitle>
+                            <Typography variant="h5" component="h5">The Food is safe for consuming</Typography>
+                        </Alert> :
 
-                <Alert severity="error" variant="outlined">
-                    <AlertTitle>Unsafe</AlertTitle>
-                    <Typography variant="h5" component="h5">The Food is not safe for consuming</Typography>
-                </Alert>
+                        <Alert severity="error" variant="outlined">
+                            <AlertTitle>Unsafe</AlertTitle>
+                            <Typography variant="h5" component="h5">The Food is not safe for consuming</Typography>
+                        </Alert>
+                    }
+                </>
             }
 
             <Box sx={{ display: "flex", gap: "1rem", marginBottom: "2rem" }}>
