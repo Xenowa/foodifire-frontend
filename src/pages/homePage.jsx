@@ -78,7 +78,7 @@ export default function HomePage({ diseases }) {
         const dataUrl = tempCanvas.toDataURL("image/jpeg")
 
         // send results
-        const result = await fetch("http://localhost:3000/getReport", {
+        const result = await fetch("https://foodifire-backend-production.up.railway.app/getReport", {
             method: "POST",
             headers: {
                 "content-type": "application/json"
