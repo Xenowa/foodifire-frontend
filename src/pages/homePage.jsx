@@ -40,7 +40,8 @@ export default function HomePage({ diseases }) {
             .then(function (mediaStream) {
                 stream = mediaStream;
                 cameraInput.current.srcObject = stream;
-                cameraInput.current.play();
+                cameraInput.current.setAttribute("autoplay", true)
+                // cameraInput.current.play();
             })
             .catch(function (err) {
                 console.log(err)
