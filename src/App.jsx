@@ -112,7 +112,7 @@ export default function App() {
         {/* Defining protected routes */}
         <Route element={<ProtectedRoutes user={user} />}>
           <Route path='/home' element={<HomePage userToken={user?.token} diseases={diseases} />} />
-          <Route path='/diseases' element={<DiseasesPage diseases={diseases} addDisease={addDisease} removeDisease={removeDisease} />} />
+          <Route path='/diseases' element={<DiseasesPage user={user} diseases={diseases} addDisease={addDisease} removeDisease={removeDisease} />} />
           <Route path='/reports' element={<ReportsPage diseases={diseases} reports={reports} />} />
           <Route path='/recommendations' element={<Typography variant="h1" component="h1" textAlign="center">Under Construction...</Typography>} />
           <Route path='/options' element={<UserOptionsPage user={user} signOut={signOut} />} />

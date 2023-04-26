@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState } from "react"
 import DiseaseInput from "../components/diseaseInput"
 
-export default function DiseasesPage({ diseases, addDisease, removeDisease }) {
+export default function DiseasesPage({ user, diseases, addDisease, removeDisease }) {
     // ==
     // JS
     // ==
@@ -20,8 +20,62 @@ export default function DiseasesPage({ diseases, addDisease, removeDisease }) {
     }
 
     function addCondition(disease) {
-        addDisease(disease)
-        setShowDiseases(true)
+        // Add disease to the DB
+        fetch("http://localhost:3000/disease", {
+            method: "POST",
+            headers: {
+                "content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userToken: user.token,
+                userEmail: user.email,
+                condition: disease
+            })
+        }).then(async (data) => {
+            const result = await data.json()
+
+            // handle error response
+            if (data.status !== 200) {
+                console.log(result)
+                return
+            }
+
+            // set the state if successful
+            console.log(result)
+            addDisease(disease)
+            setShowDiseases(true)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
+    function removeCondition(disease) {
+        // Remove disease from the DB
+        fetch("http://localhost:3000/disease", {
+            method: "DELETE",
+            headers: {
+                "content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userToken: user.token,
+                userEmail: user.email,
+                condition: disease
+            })
+        }).then(async (data) => {
+            const result = await data.json()
+
+            // handle error response
+            if (data.status !== 200) {
+                console.log(result)
+                return
+            }
+
+            // set the state if successful
+            console.log(result)
+            removeDisease(disease)
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 
     // ====
@@ -44,7 +98,7 @@ export default function DiseasesPage({ diseases, addDisease, removeDisease }) {
                                     {/* Uppercase the disease first letter */}
                                     <Typography variant="h3">{disease.charAt(0).toUpperCase() + disease.slice(1)}</Typography>
                                     <Box sx={{ flexGrow: 1 }} />
-                                    <IconButton data-condition={disease} onClick={(e) => removeDisease(e.currentTarget.dataset.condition)}>
+                                    <IconButton data-condition={disease} onClick={(e) => removeCondition(e.currentTarget.dataset.condition)}>
                                         <DeleteOutlineIcon sx={{ color: "error.main" }} fontSize="medium" />
                                     </IconButton>
                                 </Card>
