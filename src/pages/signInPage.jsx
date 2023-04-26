@@ -3,10 +3,32 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import foodifire from "../resources/foodifire-text-logo-vertical.svg"
-import Google from '@mui/icons-material/Google'
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import useFetch from '../auth/useFetch'
 
-export default function SignInPage({ authorize }) {
+export default function SignInPage() {
+  // Auth Checking
+  const { handleGoogle } = useFetch("http://localhost:3000/login");
+
+  // Initializing Google auth features
+  useEffect(() => {
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: "474318000996-tmjrrbrumfh0ib11uoov7n68r4280026.apps.googleusercontent.com",
+        callback: handleGoogle,
+      });
+
+      // Defining the Log In with google button properties
+      window.google.accounts.id.renderButton(document.getElementById("loginDiv"), {
+        theme: "filled_blue",
+        text: "signin_with",
+        shape: "rectangle",
+        size: "large"
+      });
+    }
+  }, [handleGoogle]);
+
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "center", gap: "2rem" }}>
       <img src={foodifire} alt="React Image" />
@@ -29,8 +51,8 @@ export default function SignInPage({ authorize }) {
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
           <Button sx={{ fontWeight: "900", minWidth: "15rem" }} variant="contained" disabled>Sign in</Button>
           <Typography variant="p" component="p">OR</Typography>
-          <Link to="/home" style={{ textDecoration: "none" }} onClick={authorize}>
-            <Button sx={{ fontWeight: "900", minWidth: "15rem" }} startIcon={<Google />} color="info" variant="contained" >Continue with google</Button>
+          <Link to="/home" style={{ textDecoration: "none" }}>
+            <div id="loginDiv"></div>
           </Link>
 
           <Typography variant="h5" component="h5">

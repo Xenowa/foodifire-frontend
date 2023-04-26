@@ -1,12 +1,34 @@
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Google from '@mui/icons-material/Google';
 import foodifire from "../resources/foodifire-text-logo-vertical.svg"
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
+import useFetch from '../auth/useFetch';
+import { useEffect } from 'react';
 
-export default function SignUpPage({ authorize }) {
+export default function SignUpPage() {
+  // Auth Checking
+  const { handleGoogle } = useFetch("http://localhost:3000/login")
+
+  useEffect(() => {
+    // Initialize google auth features
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: "474318000996-tmjrrbrumfh0ib11uoov7n68r4280026.apps.googleusercontent.com",
+        callback: handleGoogle
+      })
+    }
+
+    // Defining the sign in with google button properties
+    window.google.accounts.id.renderButton(document.getElementById("signUpDiv"), {
+      theme: "filled_blue",
+      text: "continue_with",
+      shape: "rectangle",
+      size: "large"
+    })
+  }, [handleGoogle])
+
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "center", gap: "2rem" }}>
       <img src={foodifire} alt="React Image" />
@@ -31,8 +53,8 @@ export default function SignUpPage({ authorize }) {
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
           <Button sx={{ fontWeight: "900", minWidth: "15rem" }} variant="contained" disabled>Continue</Button>
           <Typography variant="p" component="p">OR</Typography>
-          <Link to="/home" style={{ textDecoration: "none" }} onClick={authorize}>
-            <Button sx={{ fontWeight: "900", minWidth: "15rem" }} startIcon={<Google />} color="info" variant="contained">Continue with google</Button>
+          <Link to="/home" style={{ textDecoration: "none" }}>
+            <div id="signUpDiv"></div>
           </Link>
 
           <Typography variant="h5" component="h5">

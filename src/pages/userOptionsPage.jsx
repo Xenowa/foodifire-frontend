@@ -7,11 +7,15 @@ import Button from '@mui/material/Button';
 import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-export default function UserOptionsPage({ userName, signOut }) {
+export default function UserOptionsPage({ user, signOut }) {
   return (
     <Box sx={{ minHeight: "80vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-      <PersonIcon color="secondary" sx={{ width: "5rem", minHeight: "5rem", bgcolor: "primary.main", borderRadius: "20rem", padding: "2.5rem" }} />
-      <Typography variant="h1" component="h1">{userName}</Typography>
+      {/* Display User Logo if exists else a general logo */}
+      {user.picture ? <img src={user.picture} /> :
+        <PersonIcon color="secondary" sx={{ width: "5rem", minHeight: "5rem", bgcolor: "primary.main", borderRadius: "20rem", padding: "2.5rem" }} />
+      }
+
+      <Typography variant="h1" component="h1">{user.firstName + " " + user.lastName}</Typography>
 
 
       <Link to="/home" style={{ textDecoration: "none", color: "#ffffff" }}>

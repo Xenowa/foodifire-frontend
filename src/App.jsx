@@ -4,7 +4,7 @@ import DiseasesPage from './pages/diseasesPage'
 import ReportsPage from './pages/reportsPage'
 import SignInPage from './pages/signInPage'
 import SignUpPage from './pages/signUpPage'
-import { BrowserRouter, HashRouter, Navigate, Route, Routes } from "react-router-dom"
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom"
 import { Typography } from '@mui/material'
 import ProtectedRoutes from './auth/protectedRoutes'
 import { useEffect, useState } from 'react'
@@ -18,7 +18,7 @@ export default function App() {
   // =================
   // User Disease Data
   // =================
-  // Create local storage array
+  // Create local storage array if not exists
   if (!localStorage.getItem("userDiseases")) {
     localStorage.setItem("userDiseases", JSON.stringify([]))
   }
@@ -74,30 +74,27 @@ export default function App() {
   // =============
   // Authorization
   // =============
-  // Create localstorage userToken Instance
-  if (!localStorage.getItem("userToken")) {
-    localStorage.setItem("userToken", "")
-    localStorage.setItem("userName", "")
-  }
-
-  // get token from local storage to a state
-  const [userToken, setUserToken] = useState(localStorage.getItem("userToken"))
-  const [userName, setUserName] = useState(localStorage.getItem("userName"))
+  const [user, setUser] = useState({})
 
   // Google SSO auth function
-  function authorize() {
-    localStorage.setItem("userToken", "nkbh2x4s")
-    localStorage.setItem("userName", "Jhon Doe")
-    setUserToken(localStorage.getItem("userToken"))
-    setUserName(localStorage.getItem("userName"))
-  }
+  useEffect(() => {
+    const theUser = localStorage.getItem("user");
+
+    if (theUser && !theUser.includes("undefined")) {
+      const parsedUser = JSON.parse(theUser)
+      setUser(parsedUser);
+    }
+  }, [])
 
   // Unsubcribe auth function
   function signOut() {
-    localStorage.removeItem("userToken")
-    localStorage.removeItem("userName")
-    setUserToken("")
-    setUserName("")
+    // Clear local storage
+    localStorage.removeItem("user");
+    localStorage.removeItem("userDiseases");
+    localStorage.removeItem("userReports");
+
+    // refresh react app
+    window.location.reload();
   }
 
   // ====
@@ -109,16 +106,16 @@ export default function App() {
     <HashRouter basename="/">
       <Routes>
         {/* Defining Auth Routes */}
-        <Route path='/' element={userToken ? <Navigate to="/home" /> : <SignUpPage authorize={authorize} />} />
-        <Route path='/signin' element={userToken ? <Navigate to="/home" /> : <SignInPage authorize={authorize} />} />
-        <Route path='/options' element={<UserOptionsPage userName={userName} signOut={signOut} />} />
+        <Route path='/' element={user?.email ? <Navigate to="/home" /> : <SignUpPage />} />
+        <Route path='/signin' element={user?.email ? <Navigate to="/home" /> : <SignInPage />} />
 
         {/* Defining protected routes */}
-        <Route element={<ProtectedRoutes userToken={userToken} />}>
-          <Route path='/home' element={<HomePage diseases={diseases} />} />
+        <Route element={<ProtectedRoutes user={user} />}>
+          <Route path='/home' element={<HomePage userToken={user?.token} diseases={diseases} />} />
           <Route path='/diseases' element={<DiseasesPage diseases={diseases} addDisease={addDisease} removeDisease={removeDisease} />} />
           <Route path='/reports' element={<ReportsPage diseases={diseases} reports={reports} />} />
           <Route path='/recommendations' element={<Typography variant="h1" component="h1" textAlign="center">Under Construction...</Typography>} />
+          <Route path='/options' element={<UserOptionsPage user={user} signOut={signOut} />} />
         </Route>
 
         {/* Defining Error Page */}

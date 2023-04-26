@@ -6,7 +6,7 @@ import CameraIcon from '@mui/icons-material/Camera';
 import { useRef, useState } from "react";
 import Report from "../components/report"
 
-export default function HomePage({ diseases }) {
+export default function HomePage({ userToken, diseases }) {
     // ==
     // JS
     // ==
@@ -79,12 +79,17 @@ export default function HomePage({ diseases }) {
         const dataUrl = tempCanvas.toDataURL("image/jpeg")
 
         // send results
-        const result = await fetch("https://foodifire-backend-production.up.railway.app/getReport", {
+        // Remote Server
+        // const result = await fetch("https://foodifire-backend-production.up.railway.app/getReport", {
+        const result = await fetch("http://localhost:3000/getReport", {
             method: "POST",
             headers: {
                 "content-type": "application/json"
             },
-            body: JSON.stringify({ image: dataUrl })
+            body: JSON.stringify({
+                image: dataUrl,
+                userToken: userToken
+            })
         }).then((res) => {
             return res.json()
         }).then((data) => {

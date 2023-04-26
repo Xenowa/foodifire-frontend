@@ -2,15 +2,8 @@ import { Navigate, Outlet } from "react-router-dom"
 import Footer from "../components/footer"
 import Navbar from "../components/navbar"
 
-
-function useAuth(userToken) {
-    const user = { loggedIn: userToken === "nkbh2x4s" ? true : false }
-    // const user = { loggedIn: true }
-    return user && user.loggedIn
-}
-
-export default function ProtectedRoutes({ userToken }) {
-    const isAuth = useAuth(userToken)
+export default function ProtectedRoutes({ user }) {
+    const isAuth = user?.email ? true : false
 
     return (
         isAuth ?
