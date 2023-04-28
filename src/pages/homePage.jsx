@@ -6,7 +6,7 @@ import CameraIcon from '@mui/icons-material/Camera';
 import { useRef, useState } from "react";
 import Report from "../components/report"
 
-export default function HomePage({ userToken, diseases }) {
+export default function HomePage({ userToken, diseases, addReport }) {
     // ==
     // JS
     // ==
@@ -116,7 +116,7 @@ export default function HomePage({ userToken, diseases }) {
         <div>
             {showReport ?
 
-                <Report diseases={diseases} prediction={prediction} closeReport={closeReport} /> :
+                <Report diseases={diseases} prediction={prediction} closeReport={closeReport} addReport={addReport} /> :
 
                 <Container maxWidth="xxl" sx={{ marginBottom: "2rem" }}>
                     <video ref={cameraInput} style={styles.cameraStyles}></video>

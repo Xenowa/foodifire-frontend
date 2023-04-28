@@ -8,6 +8,34 @@ import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 export default function UserOptionsPage({ user, signOut }) {
+  function deleteAccount() {
+    // send delete request
+    fetch("http://localhost:3000/user", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userToken: user?.token,
+        userEmail: user?.email
+      })
+    }).then(async (data) => {
+      console.log(data)
+      const results = await data.json()
+
+      if (data.status !== 200) {
+        console.log(results)
+        return
+      }
+
+      // remove user from localStorage
+      console.log(results)
+      signOut()
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   return (
     <Box sx={{ minHeight: "80vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
       {/* Display User Logo if exists else a general logo */}
@@ -42,7 +70,7 @@ export default function UserOptionsPage({ user, signOut }) {
         color="error"
         startIcon={<ErrorIcon />}
         sx={{ fontWeight: "900", width: "15rem" }}
-        disabled
+        onClick={deleteAccount}
       >
         Delete account
       </Button>

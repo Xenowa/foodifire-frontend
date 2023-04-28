@@ -7,13 +7,12 @@ import Chip from '@mui/material/Chip';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
-export default function Report({ diseases, prediction, closeReport }) {
+export default function Report({ diseases, prediction, closeReport, addReport }) {
     // Destructuring prediction results
     const foodImageURL = prediction.foodImage || ""
     const predictedFoodName = prediction.results.foodName || ""
     const predictedDiseases = prediction.results.relatedConditions || []
     const dbMessage = prediction.results.message || ""
-    console.log(dbMessage)
     let consumable = true
 
     // If at least 1 predicted disease matches with an users disease conditions
@@ -22,6 +21,24 @@ export default function Report({ diseases, prediction, closeReport }) {
         // set consumable to false
         consumable = false
     }
+
+    // ================
+    // Report Functions
+    // ================
+    function saveReport() {
+        // Create report object
+        const report = {
+            reportID: Date.now(),
+            foodSource: predictedFoodName,
+            associatedDiseases: predictedDiseases,
+            imgURL: foodImageURL
+        }
+
+        // save report in localstorage
+        addReport(report)
+        closeReport()
+    }
+
 
     return (
         <Box sx={{
@@ -78,7 +95,7 @@ export default function Report({ diseases, prediction, closeReport }) {
             }
 
             <Box sx={{ display: "flex", gap: "1rem", marginBottom: "2rem" }}>
-                <Button variant="contained" sx={{ fontWeight: "bold" }} disabled>Save</Button>
+                <Button variant="contained" sx={{ fontWeight: "bold" }} onClick={saveReport}>Save</Button>
                 <Button variant="contained" sx={{ fontWeight: "bold" }} onClick={closeReport}>Close</Button>
             </Box>
         </Box >
