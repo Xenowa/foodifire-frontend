@@ -6,7 +6,7 @@ import CameraIcon from '@mui/icons-material/Camera';
 import { useRef, useState } from "react";
 import Report from "../components/report"
 
-export default function HomePage({ userToken, diseases, addReport }) {
+export default function HomePage({ user, diseases, addReport }) {
     // ==
     // JS
     // ==
@@ -79,16 +79,14 @@ export default function HomePage({ userToken, diseases, addReport }) {
         const dataUrl = tempCanvas.toDataURL("image/jpeg")
 
         // send results
-        // Remote Server
-        // const result = await fetch("https://foodifire-backend-production.up.railway.app/getReport", {
-        const result = await fetch("http://localhost:3000/getReport", {
+        const result = await fetch(`${import.meta.env.VITE_API_BACKEND}/getReport`, {
             method: "POST",
             headers: {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
                 image: dataUrl,
-                userToken: userToken
+                userToken: user?.token
             })
         }).then((res) => {
             return res.json()
@@ -116,7 +114,7 @@ export default function HomePage({ userToken, diseases, addReport }) {
         <div>
             {showReport ?
 
-                <Report diseases={diseases} prediction={prediction} closeReport={closeReport} addReport={addReport} /> :
+                <Report diseases={diseases} prediction={prediction} closeReport={closeReport} addReport={addReport} user={user} /> :
 
                 <Container maxWidth="xxl" sx={{ marginBottom: "2rem" }}>
                     <video ref={cameraInput} style={styles.cameraStyles}></video>

@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 export default function UserOptionsPage({ user, signOut }) {
   function deleteAccount() {
     // send delete request
-    fetch("http://localhost:3000/user", {
+    fetch(`${import.meta.env.VITE_API_BACKEND}/user`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"

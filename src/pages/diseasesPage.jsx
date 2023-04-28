@@ -21,7 +21,7 @@ export default function DiseasesPage({ user, diseases, addDisease, removeDisease
 
     function addCondition(disease) {
         // Add disease to the DB
-        fetch("http://localhost:3000/disease", {
+        fetch(`${import.meta.env.VITE_API_BACKEND}/disease`, {
             method: "POST",
             headers: {
                 "content-Type": "application/json"
@@ -51,7 +51,7 @@ export default function DiseasesPage({ user, diseases, addDisease, removeDisease
 
     function removeCondition(disease) {
         // Remove disease from the DB
-        fetch("http://localhost:3000/disease", {
+        fetch(`${import.meta.env.VITE_API_BACKEND}/disease`, {
             method: "DELETE",
             headers: {
                 "content-Type": "application/json"

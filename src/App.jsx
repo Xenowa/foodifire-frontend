@@ -76,32 +76,6 @@ export default function App() {
   }, [reports])
 
   // =============
-  // Dummy Reports
-  // =============
-  // const reports = [
-  //   {
-  //     foodSource: "Hamburger",
-  //     associatedDiseases: ["high cholesterol"],
-  //     imgURL: "https://fastly.picsum.photos/id/425/200/300.jpg?hmac=P1vjZ6T-wo-aULK7NbbLYxIaV92_0q56o0BFWcWOdmo"
-  //   },
-  //   {
-  //     foodSource: "Apple pie",
-  //     associatedDiseases: ["diabetes", "coronary heart disease"],
-  //     imgURL: "https://fastly.picsum.photos/id/824/200/300.jpg?hmac=CPaWVapi5aRxRDN0wSZfBeD_w8iiddSi1zhfyLj7AnA"
-  //   },
-  //   {
-  //     foodSource: "Cheesecake",
-  //     associatedDiseases: ["high cholesterol", "nephrotic syndrome", "arthritis"],
-  //     imgURL: "https://fastly.picsum.photos/id/488/200/300.jpg?hmac=0juhK9GVPUpSjHaRjdjZO5Fw2bcfSYHNjXLYTg3ZsQU"
-  //   },
-  //   {
-  //     foodSource: "Ice cream",
-  //     associatedDiseases: ["migraine", "coronary heart disease", "cerebrovascular disease", "high cholesterol", "arthritis"],
-  //     imgURL: "https://fastly.picsum.photos/id/75/200/300.jpg?hmac=sjSIzdmDj0dZefwBIN61pwl3azxymhEGh9owb8ZEgxg"
-  //   }
-  // ]
-
-  // =============
   // Authorization
   // =============
   const [user, setUser] = useState({})
@@ -141,9 +115,9 @@ export default function App() {
 
         {/* Defining protected routes */}
         <Route element={<ProtectedRoutes user={user} />}>
-          <Route path='/home' element={<HomePage userToken={user?.token} diseases={diseases} addReport={addReport} />} />
+          <Route path='/home' element={<HomePage user={user} diseases={diseases} addReport={addReport} />} />
           <Route path='/diseases' element={<DiseasesPage user={user} diseases={diseases} addDisease={addDisease} removeDisease={removeDisease} />} />
-          <Route path='/reports' element={<ReportsPage diseases={diseases} reports={reports} removeReport={removeReport} />} />
+          <Route path='/reports' element={<ReportsPage user={user} diseases={diseases} reports={reports} removeReport={removeReport} />} />
           <Route path='/recommendations' element={<Typography variant="h1" component="h1" textAlign="center">Under Construction...</Typography>} />
           <Route path='/options' element={<UserOptionsPage user={user} signOut={signOut} />} />
         </Route>

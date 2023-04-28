@@ -7,7 +7,7 @@ import Chip from '@mui/material/Chip';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
-export default function SavedReport({ diseases, report, closeReport, removeReport }) {
+export default function SavedReport({ user, diseases, report, closeReport, removeReport }) {
     // Destructuring prediction results
     const foodImageURL = report.imgURL || ""
     const predictedFoodName = report.foodSource || ""
@@ -28,9 +28,30 @@ export default function SavedReport({ diseases, report, closeReport, removeRepor
         // Get the reportID of the current report
         const ID = report.reportID
 
-        // remove report from localstorage
-        removeReport(ID)
-        closeReport()
+        // remove report from DB
+        fetch(`${import.meta.env.VITE_API_BACKEND}/report`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userToken: user?.token,
+                userEmail: user?.email,
+                report: report
+            })
+        }).then(async (data) => {
+            const result = await data.json()
+
+            if (data.status !== 200) {
+                console.log(result)
+                return
+            }
+
+            // remove report from localstorage
+            console.log(result)
+            removeReport(ID)
+            closeReport()
+        })
     }
 
 

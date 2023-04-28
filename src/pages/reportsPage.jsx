@@ -11,7 +11,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { useState } from "react";
 import SavedReport from "../components/savedReport";
 
-export default function ReportsPage({ diseases, reports, removeReport }) {
+export default function ReportsPage({ user, diseases, reports, removeReport }) {
     // ==
     // JS
     // ==
@@ -35,7 +35,7 @@ export default function ReportsPage({ diseases, reports, removeReport }) {
             <Typography variant="h1" component="h1" textAlign="center" marginTop="2rem">My Reports</Typography>
 
             {showReport ?
-                <SavedReport diseases={diseases} report={report} closeReport={closeReport} removeReport={removeReport} /> :
+                <SavedReport user={user} diseases={diseases} report={report} closeReport={closeReport} removeReport={removeReport} /> :
                 <Container maxWidth="xxl" sx={{ margin: "1rem 0", display: "flex", flexWrap: "wrap", gap: "1rem", alignItems: "center", justifyContent: "center", minHeight: "75vh" }}>
                     {reports.map((report, reportNumber) => {
                         // Check if diseases given by the user matches with the diseases in the food report

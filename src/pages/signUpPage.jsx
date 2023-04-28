@@ -9,13 +9,13 @@ import { useEffect } from 'react';
 
 export default function SignUpPage() {
   // Auth Checking
-  const { handleGoogle } = useFetch("http://localhost:3000/login")
+  const { handleGoogle } = useFetch(`${import.meta.env.VITE_API_BACKEND}/login`)
 
   useEffect(() => {
     // Initialize google auth features
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: "474318000996-tmjrrbrumfh0ib11uoov7n68r4280026.apps.googleusercontent.com",
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleGoogle
       })
     }

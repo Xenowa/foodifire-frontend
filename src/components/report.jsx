@@ -7,7 +7,7 @@ import Chip from '@mui/material/Chip';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
-export default function Report({ diseases, prediction, closeReport, addReport }) {
+export default function Report({ diseases, prediction, closeReport, addReport, user }) {
     // Destructuring prediction results
     const foodImageURL = prediction.foodImage || ""
     const predictedFoodName = prediction.results.foodName || ""
@@ -34,9 +34,33 @@ export default function Report({ diseases, prediction, closeReport, addReport })
             imgURL: foodImageURL
         }
 
-        // save report in localstorage
-        addReport(report)
-        closeReport()
+        // save report to DB
+        fetch(`${import.meta.env.VITE_API_BACKEND}/report`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userToken: user?.token,
+                userEmail: user?.email,
+                report: report
+            })
+        }).then(async (data) => {
+            const result = await data.json()
+
+            if (data.status !== 200) {
+                console.log(result)
+                return
+            }
+
+            // save report in localstorage
+            console.log(result)
+            addReport(report)
+            closeReport()
+        }).catch((err) => {
+            console.log(err)
+        })
+
     }
 
 
